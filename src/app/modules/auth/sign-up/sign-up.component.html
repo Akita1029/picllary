@@ -1,0 +1,119 @@
+<div class="flex flex-col sm:flex-row items-center md:items-center sm:justify-center md:justify-center flex-auto min-w-0">
+    <div class="md:flex md:items-center md:justify-center w-full sm:w-auto md:h-full md:w-full py-8 px-4 sm:p-12 md:p-16 sm:rounded-2xl md:rounded-none sm:shadow md:shadow-none sm:bg-card">
+        <div class="w-120 mx-auto sm:mx-0">
+            <!-- Logo -->
+            <div class="flex flex-col jsutify-center items-center mb-4">
+                <img src="assets/images/logo/picllary-theme-logo.png" class="w-60">
+                <!-- <img src="assets/images/logo/logo.svg"> -->
+            </div>
+            <mat-card class="mat-card mat-focus-indicator">
+                <mat-card-content class="mat-card-content">
+                    <div class="flex flex-col jsutify-center items-center mt-8 text-4xl font-extrabold tracking-tight leading-tight mb-5">Create your account</div>
+                    <!-- Alert -->
+                    <fuse-alert
+                        class="mt-8 -mb-4"
+                        *ngIf="showAlert"
+                        [appearance]="'outline'"
+                        [showIcon]="false"
+                        [type]="alert.type"
+                        [@shake]="alert.type === 'error'">
+                        {{alert.message}}
+                    </fuse-alert>
+
+                    <!-- Sign Up form -->
+                    <form class="mt-8" [formGroup]="signUpForm">
+                        <div class="flex flex-col jsutify-center items-center mb-4">
+                            <mat-radio-group aria-label="Select an option" [formControlName]="'isPhotographer'">
+                                <mat-radio-button [value]='false'>User</mat-radio-button>
+                                <mat-radio-button [value]='true'>Photographer</mat-radio-button>
+                            </mat-radio-group>
+                            <mat-error *ngIf="(signUpForm.dirty || signUpForm.touched) && signUpForm.get('isPhotographer')?.hasError('required')">
+                                Select an option !
+                            </mat-error>
+                        </div>
+                        <div style="height: 10px;"></div>
+
+                        <!--Fist Name field -->
+                        <div class="form-field mb-4 flex flex-col items-center">
+                            <mat-form-field class="w-5/6">
+                                <mat-icon matPrefix [svgIcon]="'heroicons_solid:user'"></mat-icon>
+                                <input id="firstName" matInput [formControlName]="'firstName'" placeholder="First Name">
+                                <mat-error *ngIf="signUpForm.get('firstName').hasError('required')">First Name is required</mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <!--Last Name field -->
+                        <div class="form-field mb-4 flex flex-col items-center">
+                            <mat-form-field class="w-5/6">
+                                <mat-icon matPrefix [svgIcon]="'heroicons_solid:user'"></mat-icon>
+                                <input id="lastName" matInput [formControlName]="'lastName'" placeholder="Last Name"> 
+                            </mat-form-field>
+                        </div>
+
+                        <!-- Mobile field -->
+                        <div class="form-field mb-4 flex flex-col items-center">
+                            <mat-form-field class="w-5/6">
+                                <mat-icon matPrefix>phone</mat-icon>
+                                <input id="mobile" matInput [formControlName]="'mobile'" type="text" placeholder="4930774615846">
+                                <mat-error *ngIf="signUpForm.get('mobile').hasError('required')"> Mobile is required</mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <!-- Email field -->
+                        <div class="form-field mb-4 flex flex-col items-center">
+                            <mat-form-field class="w-5/6">
+                                <mat-icon matPrefix>email</mat-icon>
+                                <input id="email" matInput [formControlName]="'email'">
+                                <mat-error *ngIf="signUpForm.get('email').hasError('required')">Email address is required</mat-error>
+                                <mat-error *ngIf="signUpForm.get('email').hasError('email')">Please enter a valid email address</mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <!-- Password field -->
+                        <div class="form-field mb-4 flex flex-col items-center">
+                            <mat-form-field class="w-5/6">
+                                <mat-icon matPrefix>lock</mat-icon>
+                                <input id="password" matInput type="password" [formControlName]="'password'" #passwordField>
+                                <button mat-icon-button type="button" (click)="passwordField.type === 'password' ? passwordField.type = 'text' : passwordField.type = 'password'" matSuffix>
+                                    <mat-icon class="icon-size-5" *ngIf="passwordField.type === 'password'" [svgIcon]="'heroicons_solid:eye'"></mat-icon>
+                                    <mat-icon class="icon-size-5" *ngIf="passwordField.type === 'text'" [svgIcon]="'heroicons_solid:eye-off'"></mat-icon>
+                                </button>
+                                <mat-error>Password is required</mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <!-- ToS and PP -->
+                        <div class="inline-flex items-end w-full mt-1.5 flex flex-col items-center">
+                            <mat-checkbox [color]="'primary'" [formControlName]="'agreements'">
+                                <span>I agree to the</span>
+                                <a class="ml-1 text-primary-500 hover:underline" [routerLink]="['./']">Terms of Service</a>
+                                <span>and</span>
+                                <a class="ml-1 text-primary-500 hover:underline" [routerLink]="['./']">Privacy Policy</a>
+                            </mat-checkbox>
+                        </div>
+
+                        <!-- Submit button -->
+                        <button class="fuse-mat-button-large w-full mt-6" mat-flat-button style="background-color: #58c05b !important;"
+                            [disabled]="signUpForm.disabled"
+                            (click)="signUp()">
+                            <span *ngIf="!signUpForm.disabled">
+                                Create your free account
+                            </span>
+                            <mat-progress-spinner
+                                *ngIf="signUpForm.disabled"
+                                [diameter]="24"
+                                [mode]="'indeterminate'"></mat-progress-spinner>
+                        </button>
+                    </form>
+                    <div class="flex items-baseline mt-4 font-normal">
+                        <div>Have you an account?</div>
+                        <a
+                            class="ml-0 text-primary-500"
+                            [routerLink]="['/sign-in']">Sign in
+                        </a>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+</div>

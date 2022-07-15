@@ -1,0 +1,95 @@
+<div class="flex flex-col sm:flex-row items-center md:items-center sm:justify-center md:justify-center flex-auto min-w-0">
+    <div class="md:flex md:items-center md:justify-center w-full sm:w-auto md:h-full md:w-full py-8 px-4 sm:p-12 md:p-16 sm:rounded-2xl md:rounded-none sm:shadow md:shadow-none sm:bg-card">
+        <div class="w-120 mx-auto sm:mx-0">
+            <!-- Logo -->
+            <div class="flex flex-col jsutify-center items-center mb-4">
+                <img src="assets/images/logo/picllary-theme-logo.png" class="w-60">
+                <!-- <img src="assets/images/logo/logo.svg"> -->
+            </div>
+            
+            <mat-card class="mat-card mat-focus-indicator">
+                <mat-card-content class="mat-card-content">
+                    <!-- Alert -->
+                    <fuse-alert
+                        class="mt-8 -mb-4"
+                        *ngIf="showAlert"
+                        [appearance]="'outline'"
+                        [showIcon]="false"
+                        [type]="alert.type"
+                        [@shake]="alert.type === 'error'">
+                        {{alert.message}}
+                    </fuse-alert>
+                    <div class="mt-8 text-4xl font-extrabold tracking-tight leading-tight mb-5 flex flex-col jsutify-center  items-center">Log in to continue</div>
+                    <form class="mt-8" [formGroup]="signInForm" #signInNgForm="ngForm">
+                        <div class="form-field mb-4 flex flex-col items-center">
+                            <mat-form-field class="w-5/6">
+                                <mat-icon matPrefix>email</mat-icon>
+                                <input id="email" matInput [formControlName]="'email'">
+                                <mat-error *ngIf="signInForm.get('email').hasError('required')">Email address is required</mat-error>
+                                <mat-error *ngIf="signInForm.get('email').hasError('email')">Please enter a valid email address</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="form-field mb-6 flex flex-col items-center">
+                            <mat-form-field class="w-5/6">
+                                <mat-icon matPrefix>lock</mat-icon>
+                                <input id="password" matInput type="password" [formControlName]="'password'" #passwordField>
+                                <a class="text-md font-medium text-primary-500 hover:underline" [routerLink]="['/forgot-password']">Forgot? </a>
+                                <mat-error>Password is required</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="flex flex-col jsutify-center items-center">
+                            <button class="fuse-mat-button-large w-100 mt-3" style="background-color: #58c05b !important;" mat-flat-button [disabled]="signInForm.disabled" (click)="signIn()">
+                                <span *ngIf="!signInForm.disabled">Sign in</span>
+                                <mat-progress-spinner
+                                    *ngIf="signInForm.disabled"
+                                    [diameter]="24"
+                                    [mode]="'indeterminate'"></mat-progress-spinner>
+                            </button>
+                        </div>
+                        
+                    </form>
+                    <!-- Separator -->
+                    <div class="flex items-center mt-2">
+                        <div class="flex-auto mt-px border-t"></div>
+                        <div class="mx-2 text-secondary">Or continue with</div>
+                        <div class="flex-auto mt-px border-t"></div>
+                    </div>
+                    <!-- Single sign-on buttons -->
+                    <div class="flex items-center mt-2 space-x-2">
+                        <button
+                            class="flex-auto"
+                            type="button"
+                            mat-stroked-button>
+                            <mat-icon
+                                class="icon-size-5"
+                                [svgIcon]="'feather:facebook'"></mat-icon>
+                        </button>
+                        <button
+                            class="flex-auto"
+                            type="button"
+                            mat-stroked-button>
+                            <mat-icon
+                                class="icon-size-5"
+                                [svgIcon]="'feather:twitter'"></mat-icon>
+                        </button>
+                        <button
+                            class="flex-auto"
+                            type="button"
+                            mat-stroked-button>
+                            <mat-icon
+                                class="icon-size-5"
+                                [svgIcon]="'feather:instagram'"></mat-icon>
+                        </button>
+                    </div>
+                    <div class="flex items-baseline mt-4 font-normal">
+                        <div>Don't have an account?</div>
+                        <a
+                            class="ml-0 text-primary-500"
+                            [routerLink]="['/sign-up']">Sign up
+                        </a>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+</div>

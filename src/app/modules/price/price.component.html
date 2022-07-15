@@ -1,0 +1,261 @@
+<div class="relative flex flex-col flex-auto min-w-0 overflow-hidden">
+
+    <!-- Header & Cards -->
+    <div class="relative pt-8 pb-12 sm:pt-20 sm:pb-24 px-6 sm:px-16 overflow-hidden">
+        <!-- Background - @formatter:off -->
+        <svg class="-z-1 absolute inset-0"
+             viewBox="0 0 960 540" width="100%" height="100%" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+            <g class="opacity-40 text-gray-200 dark:text-gray-800" fill="none" stroke="currentColor" stroke-width="100">
+                <circle r="234" cx="196" cy="23"></circle>
+                <circle r="234" cx="790" cy="491"></circle>
+            </g>
+        </svg>
+        <!-- @formatter:on -->
+        <!-- Header -->
+        <div class="flex flex-col items-center">
+            <h2 class="text-xl font-semibold">PRICING</h2>
+            <div class="mt-1 text-4xl sm:text-7xl font-extrabold tracking-tight leading-tight text-center">
+                Take control of your productivity
+            </div>
+            <div class="mt-3 sm:text-2xl text-center tracking-tight text-secondary">
+                <div class="">Start small and free, upgrade as you go.</div>
+                <div class="">Take control of everything.</div>
+            </div>
+            <!-- Recurring selector -->
+            <div class="flex items-center mt-8 sm:mt-16 p-0.5 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700">
+                <button
+                    class="px-6"
+                    [ngClass]="{'bg-card pointer-events-none shadow': yearlyBilling,
+                                'bg-transparent': !yearlyBilling}"
+                    mat-flat-button
+                    (click)="yearlyBilling = true"
+                    disableRipple>
+                    Yearly billing
+                </button>
+                <button
+                    class="px-6"
+                    [ngClass]="{'bg-card pointer-events-none shadow': !yearlyBilling,
+                                'bg-transparent': yearlyBilling}"
+                    mat-flat-button
+                    (click)="yearlyBilling = false"
+                    disableRipple>
+                    Monthly billing
+                </button>
+            </div>
+        </div>
+        <!-- Cards -->
+        <div class="flex justify-center mt-10 sm:mt-20">
+            <div class="w-full max-w-sm md:max-w-7xl">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-6 lg:gap-y-0 md:gap-x-6">
+                    <!-- Card 1 -->
+                    <fuse-card class="flex-col max-w-sm md:max-w-none p-6 sm:py-12 sm:px-10">
+                        <div class="text-4xl font-bold tracking-tight leading-tight">Personal</div>
+                        <div class="mt-2 text-lg font-medium tracking-tight text-secondary">Perfect for an individual or a small team starting to get bigger</div>
+                        <div class="w-8 h-1 my-10 rounded bg-accent"></div>
+                        <!-- Price -->
+                        <div class="flex items-baseline whitespace-nowrap">
+                            <div class="mr-2 text-2xl">USD</div>
+                            <div class="text-6xl font-semibold leading-tight tracking-tight">
+                                <ng-container *ngIf="yearlyBilling">$6.00</ng-container>
+                                <ng-container *ngIf="!yearlyBilling">$9.00</ng-container>
+                            </div>
+                        </div>
+                        <!-- Price details -->
+                        <div class="flex flex-col mt-2 text-secondary">
+                            <ng-container *ngIf="yearlyBilling">
+                                <div>billed yearly</div>
+                                <div><b>$9.00</b> billed monthly</div>
+                            </ng-container>
+                            <ng-container *ngIf="!yearlyBilling">
+                                <div>billed monthly</div>
+                                <div><b>$6.00</b> billed yearly</div>
+                            </ng-container>
+                        </div>
+                        <!-- CTA -->
+                        <button
+                            class="fuse-mat-button-large mt-10"
+                            mat-stroked-button
+                            [color]="'primary'">
+                            Get Started
+                        </button>
+                        <!-- Features -->
+                        <div class="flex flex-col mt-12">
+                            <div class="font-semibold">Core features, including:</div>
+                            <div class="mt-4 space-y-2">
+                                <div class="flex">
+                                    <mat-icon
+                                        class="icon-size-5 text-green-600"
+                                        [svgIcon]="'heroicons_solid:check'"></mat-icon>
+                                    <div class="ml-2 leading-5"><b>10</b> projects</div>
+                                </div>
+                                <div class="flex">
+                                    <mat-icon
+                                        class="icon-size-5 text-green-600"
+                                        [svgIcon]="'heroicons_solid:check'"></mat-icon>
+                                    <div class="ml-2 leading-5"><b>5GB</b> storage</div>
+                                </div>
+                                <div class="flex">
+                                    <mat-icon
+                                        class="icon-size-5 text-green-600"
+                                        [svgIcon]="'heroicons_solid:check'"></mat-icon>
+                                    <div class="ml-2 leading-5">Analytics</div>
+                                </div>
+                                <div class="flex">
+                                    <mat-icon
+                                        class="icon-size-5 text-green-600"
+                                        [svgIcon]="'heroicons_solid:check'"></mat-icon>
+                                    <div class="ml-2 leading-5">Free mobile app</div>
+                                </div>
+                                <div class="flex">
+                                    <mat-icon
+                                        class="icon-size-5 text-green-600"
+                                        [svgIcon]="'heroicons_solid:check'"></mat-icon>
+                                    <div class="ml-2 leading-5">Access to forums</div>
+                                </div>
+                            </div>
+                        </div>
+                    </fuse-card>
+                    <!-- Card 2 -->
+                    <fuse-card class="flex-col max-w-sm md:max-w-none p-6 sm:py-12 sm:px-10 ring-2 ring-primary overflow-visible">
+                        <div class="absolute inset-x-0 -top-4 flex items-center justify-center">
+                            <div class="flex items-center h-8 px-8 rounded-full font-medium text-center leading-none bg-primary text-on-primary">POPULAR</div>
+                        </div>
+                        <div class="text-4xl font-bold tracking-tight leading-tight">Premium</div>
+                        <div class="mt-2 text-lg font-medium tracking-tight text-secondary">Perfect for growing teams wanting to be in more control</div>
+                        <div class="w-8 h-1 my-10 rounded bg-accent"></div>
+                        <!-- Price -->
+                        <div class="flex items-baseline whitespace-nowrap">
+                            <div class="mr-2 text-2xl">USD</div>
+                            <div class="text-6xl font-semibold leading-tight tracking-tight">
+                                <ng-container *ngIf="yearlyBilling">$12.00</ng-container>
+                                <ng-container *ngIf="!yearlyBilling">$15.00</ng-container>
+                            </div>
+                        </div>
+                        <!-- Price details -->
+                        <div class="flex flex-col mt-2 text-secondary">
+                            <ng-container *ngIf="yearlyBilling">
+                                <div>billed yearly</div>
+                                <div><b>$15.00</b> billed monthly</div>
+                            </ng-container>
+                            <ng-container *ngIf="!yearlyBilling">
+                                <div>billed monthly</div>
+                                <div><b>$12.00</b> billed yearly</div>
+                            </ng-container>
+                        </div>
+                        <!-- CTA -->
+                        <button
+                            class="fuse-mat-button-large mt-10"
+                            mat-flat-button
+                            [color]="'primary'">
+                            Start a free 14-day trial
+                        </button>
+                        <!-- Features -->
+                        <div class="flex flex-col mt-12">
+                            <div class="font-semibold">Personal features, plus:</div>
+                            <div class="mt-4 space-y-2">
+                                <div class="flex">
+                                    <mat-icon
+                                        class="icon-size-5 text-green-600"
+                                        [svgIcon]="'heroicons_solid:check'"></mat-icon>
+                                    <div class="ml-2 leading-5"><b>Unlimited</b> projects</div>
+                                </div>
+                                <div class="flex">
+                                    <mat-icon
+                                        class="icon-size-5 text-green-600"
+                                        [svgIcon]="'heroicons_solid:check'"></mat-icon>
+                                    <div class="ml-2 leading-5"><b>Unlimited</b> storage</div>
+                                </div>
+                                <div class="flex">
+                                    <mat-icon
+                                        class="icon-size-5 text-green-600"
+                                        [svgIcon]="'heroicons_solid:check'"></mat-icon>
+                                    <div class="ml-2 leading-5">Custom domains</div>
+                                </div>
+                                <div class="flex">
+                                    <mat-icon
+                                        class="icon-size-5 text-green-600"
+                                        [svgIcon]="'heroicons_solid:check'"></mat-icon>
+                                    <div class="ml-2 leading-5">Bulk editing</div>
+                                </div>
+                                <div class="flex">
+                                    <mat-icon
+                                        class="icon-size-5 text-green-600"
+                                        [svgIcon]="'heroicons_solid:check'"></mat-icon>
+                                    <div class="ml-2 leading-5">12 / 5 support</div>
+                                </div>
+                            </div>
+                        </div>
+                    </fuse-card>
+                    <!-- Card 3 -->
+                    <fuse-card class="flex-col max-w-sm md:max-w-none p-6 sm:py-12 sm:px-10">
+                        <div class="text-4xl font-bold tracking-tight leading-tight">Enterprise</div>
+                        <div class="mt-2 text-lg font-medium tracking-tight text-secondary">Perfect for companies wanting advanced tools and support</div>
+                        <div class="w-8 h-1 my-10 rounded bg-accent"></div>
+                        <!-- Price -->
+                        <div class="flex items-baseline whitespace-nowrap">
+                            <div class="mr-2 text-2xl">USD</div>
+                            <div class="text-6xl font-semibold leading-tight tracking-tight">
+                                <ng-container *ngIf="yearlyBilling">$49.00</ng-container>
+                                <ng-container *ngIf="!yearlyBilling">$69.00</ng-container>
+                            </div>
+                        </div>
+                        <!-- Price details -->
+                        <div class="flex flex-col mt-2 text-secondary">
+                            <ng-container *ngIf="yearlyBilling">
+                                <div>billed yearly</div>
+                                <div><b>$69.00</b> billed monthly</div>
+                            </ng-container>
+                            <ng-container *ngIf="!yearlyBilling">
+                                <div>billed monthly</div>
+                                <div><b>$49.00</b> billed yearly</div>
+                            </ng-container>
+                        </div>
+                        <!-- CTA -->
+                        <button
+                            class="fuse-mat-button-large mt-10"
+                            mat-stroked-button
+                            [color]="'primary'">
+                            Start a free 7-day trial
+                        </button>
+                        <!-- Features -->
+                        <div class="flex flex-col mt-12">
+                            <div class="font-semibold">Premium features, plus:</div>
+                            <div class="mt-4 space-y-2">
+                                <div class="flex">
+                                    <mat-icon
+                                        class="icon-size-5 text-green-600"
+                                        [svgIcon]="'heroicons_solid:check'"></mat-icon>
+                                    <div class="ml-2 leading-5"><b>Dedicated</b> hardware</div>
+                                </div>
+                                <div class="flex">
+                                    <mat-icon
+                                        class="icon-size-5 text-green-600"
+                                        [svgIcon]="'heroicons_solid:check'"></mat-icon>
+                                    <div class="ml-2 leading-5"><b>%99.9</b> uptime</div>
+                                </div>
+                                <div class="flex">
+                                    <mat-icon
+                                        class="icon-size-5 text-green-600"
+                                        [svgIcon]="'heroicons_solid:check'"></mat-icon>
+                                    <div class="ml-2 leading-5">Advanced analytics</div>
+                                </div>
+                                <div class="flex">
+                                    <mat-icon
+                                        class="icon-size-5 text-green-600"
+                                        [svgIcon]="'heroicons_solid:check'"></mat-icon>
+                                    <div class="ml-2 leading-5">3rd party integrations</div>
+                                </div>
+                                <div class="flex">
+                                    <mat-icon
+                                        class="icon-size-5 text-green-600"
+                                        [svgIcon]="'heroicons_solid:check'"></mat-icon>
+                                    <div class="ml-2 leading-5">24 / 7 support</div>
+                                </div>
+                            </div>
+                        </div>
+                    </fuse-card>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

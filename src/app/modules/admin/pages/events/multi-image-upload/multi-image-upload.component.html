@@ -1,0 +1,113 @@
+<div class="flex-auto p-6 sm:p-10">
+
+    <div class="" style="width: 615px">
+
+        <form class="bg-card shadow rounded overflow-hidden" >
+            <mat-horizontal-stepper [linear]="true" #horizontalStepper>
+                <mat-step [formGroup]="stepper1Formgroup" [stepControl]="stepper1Formgroup"
+                    #horizontalStepperStep1>
+                    <ng-template matStepLabel>Images</ng-template>
+                    <!-- drag and drop images -->
+                    <div>
+                        <ngx-dropzone class="h-20" (change)="selectFiles($event)">
+                            <ngx-dropzone-label>Drop and Drag Images!</ngx-dropzone-label>
+                        </ngx-dropzone>
+                        <div class="font-medium mt-2">Selected Images</div>
+                        <div class="font-medium mt-2" *ngIf="show_more">Please click image you want to edit</div>
+                        <div class="flex flex-wrap -m-2 mt-2"  *ngIf="show_more">
+                            <ngx-dropzone-image-preview style="width: 125px" class="border p-1 relative" ngProjectAs="ngx-dropzone-preview" *ngFor="let preview of previews; index as i;" [file]="preview" [removable]="true" (removed)="deleElement(preview)">
+                                <ngx-dropzone-label class="h-full w-full" style="cursor: pointer;" (click)="fileChangeHandler(preview, i)"><mat-icon  [svgIcon]="'heroicons_solid:pencil-alt'"></mat-icon></ngx-dropzone-label>
+                            </ngx-dropzone-image-preview>
+                            
+                        </div>
+                        <div class="flex flex-wrap -m-2 mt-2"  *ngIf="!show_more">
+                            <ngx-dropzone-image-preview style="width: 125px" class="border p-1" ngProjectAs="ngx-dropzone-preview" *ngFor="let preview of previews_show_less" [file]="preview" [removable]="true" (removed)="deleElement(preview)"></ngx-dropzone-image-preview>
+                        </div>
+                        <button class="px-8 mt-3" mat-button (click)="show_more = !show_more">
+                            <p *ngIf="show_more">Show Less</p>
+                            <p *ngIf="!show_more">Show All Images</p>
+                        </button>
+                        
+                    </div>
+                    <div class="flex justify-end">
+                        <button class="px-8" mat-flat-button [color]="'primary'" [disabled]="previews.length<1" matStepperNext>Next</button>
+                    </div>
+                    
+                </mat-step>
+
+                <mat-step [formGroup]="stepper2Formgroup" [stepControl]="stepper2Formgroup"
+                    #horizontalStepperStep2>
+                    <ng-template matStepLabel>Details</ng-template>
+                    <p class="my-6 font-medium">
+                        Image Details
+                    </p>
+
+                    <div class="flex flex-col gt-xs:flex-row">
+                        <mat-form-field class="flex-auto gt-xs:pr-3">
+                            <input matInput [formControlName]="'title'" [placeholder]="'Title'" required>
+                            <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:pencil-alt'"></mat-icon>
+                        </mat-form-field>
+                        <mat-form-field class="flex-auto gt-xs:pl-3">
+                            <input matInput [formControlName]="'discription'" [placeholder]="'Description'" required>
+                            <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:chat-alt-2'"></mat-icon>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="flex">
+                        <mat-form-field class="fuse-mat-textarea flex-auto">
+                            <mat-chip-list #chipList aria-label="tags">
+                              
+                                <mat-chip *ngFor="let tag of imageTags" (removed)="removeTag(tag)">
+                                    {{tag}}
+                                    <button matChipRemove>
+                                        <mat-icon>cancel</mat-icon>
+                                    </button>
+                                </mat-chip>
+                                <input matInput  [placeholder]="'Tag'" #fruitInput [matChipInputFor]="chipList"
+                                 [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [formControlName]="'tag'"
+                                 (matChipInputTokenEnd)="addTag($event)">
+                            <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:tag'"></mat-icon>
+                               
+                            </mat-chip-list>
+                    
+                        </mat-form-field>
+                    </div>
+
+                    <div class="flex">
+                        <mat-form-field class="fuse-mat-textarea flex-auto">
+                            <input matInput [formControlName]="'price'"  type="number" [placeholder]="'Price'">
+                            <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:currency-dollar'">
+                            </mat-icon>
+                        </mat-form-field>
+                    </div>                 
+
+                    <div class="flex justify-end">
+                        <button class="px-8 mr-2" mat-flat-button [color]="'accent'" type="button" matStepperPrevious>
+                            Back
+                        </button>
+                        <button class="px-8" mat-flat-button [color]="'primary'"
+                            [disabled]="horizontalStepperStep2.stepControl.invalid"
+                            type="button" (click)="uploadImages()" matStepperNext>
+                            Finish
+                        </button>
+                    </div>
+                </mat-step>
+
+                <mat-step>
+                    <ng-template matStepLabel>Uploading</ng-template>
+                    <p class="my-6 font-medium">
+                        Images are uploading
+                    </p>
+                    <div class="flex flex-wrap -m-2 mt-2">
+                        <mat-spinner class="justify-center" mode="indeterminate" *ngIf="uploading_state"></mat-spinner>
+                        <div *ngIf="!uploading_state">
+                            <ngx-dropzone-image-preview style="width: 125px" class="border p-1" ngProjectAs="ngx-dropzone-preview" *ngFor="let preview of previews" [file]="preview">
+                            </ngx-dropzone-image-preview>
+                        </div>
+                    </div>
+
+                </mat-step>
+            </mat-horizontal-stepper>
+        </form>
+    </div>
+</div>

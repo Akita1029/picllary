@@ -1,0 +1,116 @@
+<div class="relative flex flex-auto w-full bg-card dark:bg-transparent">
+    <mat-drawer-container class="flex-auto h-full w-full">
+
+        <!-- Chats list -->
+        <mat-drawer class="w-full sm:w-100 lg:border-r lg:shadow-none dark:bg-gray-900" [mode]="drawerMode"
+            [opened]="drawerOpened" #drawer>
+
+            <div class="relative flex flex-auto flex-col w-full min-w-0  lg:max-w-100 bg-card dark:bg-transparent">
+
+                <!-- Header -->
+                <div class="flex flex-col flex-0 py-4 px-8 border-b bg-gray-50 dark:bg-transparent">
+                    <div class="flex items-center">
+                        <mat-form-field class="fuse-mat-no-subscript fuse-mat-rounded fuse-mat-dense w-full"
+                            [floatLabel]="'always'">
+                            <mat-icon matPrefix class="icon-size-5" [svgIcon]="'heroicons_solid:search'">
+                            </mat-icon>
+                            <input matInput [autocomplete]="'off'" [placeholder]="'Search events'" #searchField
+                                (input)="onEventSearchKeychange($event.target.value)">
+                        </mat-form-field>
+                        <ng-container *ngIf="isPhotographer">
+                            <button class="ml-4 " mat-flat-button [color]="'primary'" (click)="addNewEvent()">
+                                <mat-icon class="icon-size-5 text-white" [svgIcon]="'heroicons_outline:plus-circle'">
+                                </mat-icon>
+                        
+                            </button>
+                        </ng-container>
+                    </div>
+                </div>
+
+                <!-- Chats -->
+                <div class="flex-auto overflow-y-auto">
+                    <ng-container *ngIf="(events$ | async) as allEventsSync; else loading">
+                        <ng-container *ngIf="allEventsSync.length > 0; else noEvents">
+                            <ng-container *ngFor="let event of allEvents; trackBy: trackByFn">
+                                <div class="z-20 flex items-center py-4 px-6 cursor-pointer border-b"
+                                    [ngClass]="{'bg-gray-200 dark:bg-gray-700 text-primary dark:text-primary-400': seletcedEventid == event.eventId}"
+                                    [routerLink]="['/events', event.eventId]" (click)="selectEvent(event.eventId)"
+                                    matRipple>
+                                    <div class="relative flex flex-0 items-center justify-center w-10 h-10 ">
+                                        <div *ngIf="event.isPublic">
+                                            <div
+                                                class="flex items-center justify-center w-full h-full rounded-full text-lg uppercase bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-200">
+                                                <mat-icon class="text-current"
+                                                    [svgIcon]="'heroicons_outline:globe-alt'"></mat-icon>
+                                            </div>
+                                        </div>
+                                        <div *ngIf="event.isPublic==false">
+                                            <div
+                                                class="flex items-center justify-center w-full h-full rounded-full text-lg uppercase bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-200">
+                                                <mat-icon class="text-current"
+                                                    [svgIcon]="'heroicons_outline:lock-closed'"></mat-icon>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="min-w-0 ml-4">
+                                        <div class="font-medium leading-5 truncate">{{event.eventName}}</div>
+
+                                    </div>
+                                    <div class="flex flex-col items-end self-start ml-auto pl-2">
+                                        <div class="text-sm leading-5 text-secondary">{{event.updatedAt |date}}</div>
+                                        <div *ngIf="event.isSharedEvent">
+                                            <mat-icon class="icon-size-5 text-hint"
+                                                [svgIcon]="'heroicons_outline:share'">
+                                            </mat-icon>
+                                        </div>
+                                        <div *ngIf="event.isSharedEvent==false">
+                                            <mat-icon class="icon-size-5 text-hint"
+                                                [svgIcon]="'heroicons_outline:badge-check'">
+                                            </mat-icon>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </ng-container>
+                        </ng-container>
+                    </ng-container>
+                </div>
+
+            </div>
+
+
+            <!-- No chats template -->
+            <ng-template #noEvents>
+                <div class="flex flex-auto flex-col items-center justify-center h-full">
+                    <!-- <mat-icon class="icon-size-24" [svgIcon]="'heroicons_solid:archive'"></mat-icon> -->
+                    <div class="mt-4 text-2xl font-semibold tracking-tight text-secondary">No Events</div>
+                </div>
+            </ng-template>
+
+            <ng-template #loading>
+                <div class="flex flex-auto flex-col items-center justify-center h-full">
+                    <!-- <mat-icon class="icon-size-24" [svgIcon]="'iconsmind:archive'"></mat-icon> -->
+                    <div class="mt-4 text-2xl font-semibold tracking-tight text-secondary">Loading events</div>
+                </div>
+            </ng-template>
+
+
+
+        </mat-drawer>
+        <!-- Conversation -->
+
+        <mat-drawer-content class="flex flex-col bg-gray-100 dark:bg-transparent">
+            <div class="flex flex-col flex-auto p-6 md:p-8">
+                <div class="flex items-center">
+                    <div class="flex items-center flex-auto">
+                        <button class="flex lg:hidden -ml-2" mat-icon-button (click)="drawer.toggle()">
+                            <mat-icon [svgIcon]="'heroicons_outline:menu'"></mat-icon>
+                        </button>
+
+                    </div>
+                </div>
+                <router-outlet></router-outlet>
+            </div>
+        </mat-drawer-content>
+    </mat-drawer-container>
+</div>

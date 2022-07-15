@@ -1,0 +1,246 @@
+<div class="flex flex-col flex-auto ">
+
+    <mat-drawer-container>
+
+        <!-- Drawer -->
+        <mat-drawer class="w-full sm:w-100 dark:bg-gray-900" [opened]="false" [position]="'end'" [disableClose]="true"
+            [mode]="drawerMode" #matDrawer>
+            <router-outlet></router-outlet>
+        </mat-drawer>
+        <mat-drawer-content>
+            <!-- Header -->
+            <ng-container *ngIf="(selectedEventDetails$ | async) as currentEvent; else Eventdetailsloading">
+                <div class="flex flex-col  bg-card shadow rounded-2xl sm:flex-row sm:items-center">
+                    <!-- Avatar and name -->
+                    <div class="flex flex-auto pt-2 pl-2 items-center min-w-0">
+                        <div class="flex ">
+                            <div class="flex-0 w-16 h-16 rounded-full overflow-hidden">
+
+                                <ng-container *ngIf="currentEvent.user.profilePhoto; then ProfPic; else avatar">
+                                </ng-container>
+
+                                <ng-template #ProfPic>
+                                    <img class="w-full h-full object-cover" src={{currentEvent.user.profilePhoto}}>
+
+                                </ng-template>
+                                <ng-template #avatar>
+                                    <mat-icon class="w-full h-full object-cover"
+                                        [svgIcon]="'heroicons_solid:user-circle'">
+                                    </mat-icon>
+                                </ng-template>
+
+
+                            </div>
+                            <div class="flex flex-col min-w-0 ml-4">
+
+                                <div
+                                    class="text-2xl md:text-2xl font-semibold tracking-tight leading-7 md:leading-snug truncate">
+                                    {{currentEvent.eventName }}
+
+                                </div>
+                                <div class="flex items-center">
+                                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:user'"></mat-icon>
+                                    <div class="ml-1.5 leading-6 truncate text-secondary">
+                                        {{currentEvent.user.firstName}}
+                                    </div>
+                                </div>
+                                <div class="flex items-center">
+                                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:calendar'">
+                                    </mat-icon>
+                                    <div class="ml-1.5 leading-6 truncate text-secondary">
+                                        {{currentEvent.updatedAt|date}}
+                                    </div>
+                                </div>
+
+                                
+                               
+                              
+                            </div>
+                           
+                        </div>
+
+                    </div>
+                    <!-- Actions -->
+                    <div class="flex items-center flex-auto">
+                        <mat-form-field
+                            class="fuse-mat-rounded fuse-mat-dense fuse-mat-no-subscript flex-auto ml-4 lg:ml-0">
+                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:search'" matPrefix></mat-icon>
+                            <input matInput [autocomplete]="'off'" [placeholder]="'Search Images'" #searchInput
+                                (input)="filterImages($event.target.value)">
+                        </mat-form-field>
+                    </div>
+                    <div class="flex items-center pr-2 mt-6 pb-2 sm:mt-0 sm:ml-2 space-x-3">
+
+                        <ng-container *ngIf="currentEvent.isOwner && isPhotographer">
+                            <button class="ml-4 px-1 sm:px-4 min-w-10" mat-flat-button [color]="'primary'"
+                                (click)="addMultiImage(eventid)">
+                                <mat-icon class="icon-size-5 text-white" [svgIcon]="'heroicons_outline:camera'">
+                                </mat-icon>
+                                <span class="hidden sm:inline-block ml-2">Add Images</span>
+                            </button>
+
+                        </ng-container>
+                    </div>
+                </div>
+                <div class="flex flex-row  bg-card shadow rounded-2xl sm:flex-col sm:items-start mt-5">
+                    <div class="flex flex-auto pt-2 pl-2 items-center min-w-0 mt-3 ml-5 font-bold">Filters of your events.</div>
+                    <!-- Actions -->
+                    <div class="flex flex-row mb-3 mt-3">
+                        <mat-form-field *ngFor="let filter of filterSelectObj" style="margin-left: 15px;" class="fuse-mat-rounded fuse-mat-dense fuse-mat-no-subscript w-50">
+                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:search'" matPrefix></mat-icon>
+                            <input matNativeControl #matInput name="{{filter.columnProp}}" placeholder="Filter by {{filter.name}}"
+                                (input)="filterChange(filter,$event.target.value)"/>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </ng-container>
+            <!-- Header skeleton loading-->
+            <ng-template #Eventdetailsloading>
+                <div class="flex animate-pulse flex-col  bg-card shadow rounded-2xl sm:flex-row sm:items-center">
+                    <!-- Avatar and name -->
+                    <div class="flex flex-auto pt-2 pl-2 items-center min-w-0">
+                        <div class="flex ">
+                            <div class="flex-0 w-16 h-16 rounded-full overflow-hidden">
+                                <mat-icon class="w-full h-full object-cover" [svgIcon]="'heroicons_solid:user-circle'">
+                                </mat-icon>
+                            </div>
+                            <div class="flex flex-col min-w-0 ml-4">
+                                <div class="w-25 bg-gray-300 h-4 rounded-md ">
+                                </div>
+                                <div class="flex items-center">
+                                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:user'"></mat-icon>
+                                    <div class="flex flex-col space-y-3">
+                                        <div class="w-20 bg-gray-300 h-3 rounded-md ">
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="flex items-center">
+                                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:calendar'">
+                                    </mat-icon>
+                                    <div class="w-20 bg-gray-300 h-3 rounded-md ">
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </ng-template>
+            <!-- Images -->
+            <ng-container *ngIf="(images$ | async) as images; else loading">
+                <ng-container *ngIf="images.length; else noImages">
+                    <ng-container *ngIf="allImages.length; else noImages">
+                        <!-- Masonry layout -->
+                        <fuse-masonry class="-mx-2 mt-8" [items]="allImages" [columns]="masonryColumns"
+                            [columnsTemplate]="columnsTemplate">
+                            <!-- Columns template -->
+                            <ng-template #columnsTemplate let-columns>
+                                <!-- Columns -->
+                                <ng-container *ngFor="let column of columns; trackBy: trackByFn">
+                                    <!-- Column -->
+                                    <div class="flex-1 px-2 space-y-4">
+                                        <ng-container *ngFor="let image of column.items; trackBy: trackByFn">
+
+                                            <!-- Note -->
+                                            <div
+                                                class="flex flex-col shadow rounded-2xl overflow-hidden cursor-pointer bg-card">
+                                                <!-- (click)="openImageDetailsDialog(image.imageId)"> -->
+                                                <!-- Image -->
+
+                                                <ng-container *ngIf="image.imageUrl">
+                                                    <div class="relative w-full">
+                                                        <div class="absolute right-0 bottom-0 p-4">
+
+                                                            <!-- card level edit button -->
+                                                            <button mat-icon-button [matMenuTriggerFor]="imageinfo">
+                                                                <mat-icon class="text-white"
+                                                                    [svgIcon]="'heroicons_outline:information-circle'">
+                                                                </mat-icon>
+                                                            </button>
+                                                            <!-- details pop up -->
+                                                            <mat-menu #imageinfo="matMenu">
+                                                                <button mat-menu-item>
+                                                                    <span class="flex items-center">
+                                                                        <mat-icon class="icon-size-5 mr-3"
+                                                                            [svgIcon]="'heroicons_solid:chart-pie'">
+                                                                        </mat-icon>
+                                                                        <span>Size:{{image.size}}{{image.sizeUnit}}</span>
+                                                                    </span>
+                                                                </button>
+                                                              
+                                                                <button mat-menu-item>
+                                                                    <span class="flex items-center">
+                                                                        <mat-icon class="icon-size-5 mr-3"
+                                                                            [svgIcon]="'heroicons_solid:eye'">
+                                                                        </mat-icon>
+                                                                        <span>Total views: {{image.totalView}}</span>
+                                                                    </span>
+                                                                </button>
+                                                                <mat-divider class="my-2"></mat-divider>
+                                                                <button mat-menu-item>
+                                                                    <span class="flex items-center">
+                                                                        <mat-icon class="icon-size-5 mr-3"
+                                                                            [svgIcon]="'heroicons_solid:document-download'">
+                                                                        </mat-icon>
+                                                                        <span>Total Download:{{image.totalDownloads}}</span>
+                                                                    </span>
+                                                                </button>
+                                                                <button mat-menu-item>
+                                                                    <span class="flex items-center">
+                                                                        <mat-icon class="icon-size-5 mr-3"
+                                                                            [svgIcon]="'heroicons_solid:document-text'">
+                                                                        </mat-icon>
+                                                                        <span>Image Format:{{image.format}}</span>
+                                                                    </span>
+                                                                </button>
+                                                            </mat-menu>
+                                                        </div>
+                                                        <img class="w-full object-cover" [src]="image.thumbnailImageUrl"
+                                                            (click)="openImageDetailsDialog(image)">
+                                                    </div>
+                                                </ng-container>
+                                                <div class="flex items-center w-full border-t divide-x">
+                                                    <a class="flex flex-auto items-center justify-center py-4">
+                                                        <mat-icon class="icon-size-5 text-hint"
+                                                            [svgIcon]="'heroicons_solid:annotation'"></mat-icon>
+                                                        <span class="ml-2">{{image.title}}</span>
+                                                    </a>
+                                                    <a class="flex flex-auto items-center justify-center py-4">
+                                                        <mat-icon class="icon-size-5 text-hint"
+                                                            [svgIcon]="'heroicons_solid:currency-euro'"></mat-icon>
+                                                        <span class="ml-2">{{(image.price >1) ?
+                                                            image.price:"Free"}}</span>
+                                                    </a>
+                                                </div>
+                                            </div>
+
+                                        </ng-container>
+                                    </div>
+                                </ng-container>
+                            </ng-template>
+                        </fuse-masonry>
+
+                    </ng-container>
+
+                </ng-container>
+            </ng-container>
+            <!-- Loading template -->
+            <ng-template #loading>
+                <div class="flex flex-auto flex-col items-center justify-center bg-gray-100 dark:bg-transparent">
+                    <div class="mt-4 text-2xl font-semibold tracking-tight text-secondary">Loading...</div>
+                </div>
+            </ng-template>
+
+            <!-- No image template -->
+            <ng-template #noImages>
+                <div class="flex flex-auto flex-col items-center justify-center bg-gray-100 dark:bg-transparent">
+                    <mat-icon class="icon-size-24" [svgIcon]="'iconsmind:file_hide'"></mat-icon>
+                    <div class="mt-4 text-2xl font-semibold tracking-tight text-secondary">There are no Images!</div>
+                </div>
+            </ng-template>
+        </mat-drawer-content>
+    </mat-drawer-container>
+
+</div>

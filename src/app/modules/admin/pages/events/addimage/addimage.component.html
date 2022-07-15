@@ -1,0 +1,88 @@
+<div class="flex flex-col flex-auto md:w-160 md:min-w-160 -m-6">
+    <ng-container>
+        <div class="relative w-full">
+            <img [src]="imagepath">
+        </div>
+    </ng-container>
+    <div class="m-4">
+        <form class="w-full p-2" [formGroup]="imagedetailsValidator">
+            <mat-form-field appearance="fill" class="w-full p-2">
+                <input matInput placeholder="Image Titile" formControlName="title">
+                <mat-error *ngIf="imagedetailsValidator.get('title').hasError('required')">
+                    Titile is Required!
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="w-full p-2">
+                <input matInput placeholder="Image Discription" formControlName="discription">
+                <mat-error *ngIf="imagedetailsValidator.get('discription').hasError('required')">
+                    Discription is Required!
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="w-full p-2">
+                <input matInput placeholder="Tag" formControlName="tag">
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="w-full p-2">
+                <input matInput placeholder="Price" formControlName="price">
+                <mat-error *ngIf="imagedetailsValidator.get('price').hasError('required')">
+                    Price is Required!
+                </mat-error>
+                <mat-error *ngIf="f.price.touched&&f.price.errors?.pattern">
+                    invalid Price!
+                </mat-error>
+            </mat-form-field>
+             <!-- Image -->
+             <div>
+                <mat-slide-toggle formControlName="public">Publc</mat-slide-toggle>
+            </div>
+            <div>
+                <input id="image-file-input" class="absolute h-0 w-0 opacity-0 invisible pointer-events-none" type="file"
+                    [multiple]="false" [accept]="'image/jpeg, image/png'" (change)="uploadImage($event)" #imageFileInput
+                    formControlName="imageFile">
+                <label
+                    class="flex items-center justify-center w-10 h-10 rounded-full cursor-pointer hover:bg-gray-400 hover:bg-opacity-20 dark:hover:bg-black dark:hover:bg-opacity-5"
+                    for="image-file-input" matRipple>
+                    <mat-icon [svgIcon]="'heroicons_outline:photograph'"></mat-icon>
+                </label>
+                <mat-error *ngIf="imagedetailsValidator.get('imageFile').hasError('required')">
+                    Image is Required!
+                </mat-error>
+            </div>
+
+          
+            <div class="m-4">
+                <ng-container  *ngIf="!isLoading  else wait">
+                    <div class="flex items-center justify-end mt-4">
+                        <div class="flex items-center space-x-2">
+                           
+                            <button mat-flat-button [color]="'primary'" type="submit" (click)="saveImage()">
+                                Save
+                            </button>
+                            <button mat-flat-button [color]="'warn'" (click)="cancel()">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                   
+                    <!-- Close -->                   
+                </ng-container>
+                <ng-template #wait>
+                    <div class="flex items-center justify-end mt-4">
+                        <div class="flex items-center space-x-2">
+                
+                            <button mat-flat-button [color]="'primary'" type="submit" [disabled]="true" >
+                            
+                                <mat-icon class="icon-size-5 text-white animate-spin-slow" [svgIcon]="'heroicons_outline:cog'"></mat-icon>
+                                <span class="hidden sm:inline-block ml-2">Adding Image..</span>
+                            </button>
+                           
+                        </div>
+                    </div>
+                </ng-template>
+            </div>
+           
+        </form>
+    </div>
+</div>

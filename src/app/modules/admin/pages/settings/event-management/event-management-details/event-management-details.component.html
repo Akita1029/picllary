@@ -1,0 +1,187 @@
+<div class="flex flex-col flex-auto">
+    <!-- Header1 -->
+    <div class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between p-6 sm:py-8 sm:px-10 border-b bg-card dark:bg-transparent">
+                <!-- Close button -->
+                <div class="flex items-center justify-end w-full max-w-3xl mx-auto pt-6">
+                    <button
+                        mat-icon-button
+                        [matTooltip]="'Close'"
+                        (click)="closeDrawer()">
+                        <mat-icon
+                            class="text-black"
+                            [svgIcon]="'heroicons_outline:x'"></mat-icon>
+                    </button>
+                </div>
+    </div>
+<!-- Body -->
+    <div class="flex flex-col w-full ">
+    
+        <!-- Alert -->
+            <fuse-alert
+                *ngIf="showAlert"
+                [appearance]="alert.appearance"
+                [type]="alert.type"
+                [@shake]="alert.type === 'error'">
+                {{alert.message}}
+            </fuse-alert>
+
+        <br/>
+        <!-- Event form -->
+        <div class="relative flex flex-col flex-auto items-center px-6 sm:px-12"  style="min-height: 40rem; overflow: auto;">
+            <div class="w-full max-w-3xl overflow-hidden" >
+                <form [formGroup]="eventForm" >
+                    <div class="sm:col-span-4">
+                        <mat-form-field class="fuse-mat-no-subscript fuse-mat-emphasized-affix w-full">
+                            <mat-label>Event Name</mat-label>
+                            <mat-icon
+                                matPrefix
+                                class="hidden sm:flex icon-size-5"
+                                [svgIcon]="'heroicons_solid:bell'"></mat-icon>
+                            <input
+                                matInput [formControlName]="'eventName'"
+                                [placeholder]="'Event Name'" readonly>
+                        </mat-form-field>
+                    </div>
+                    <br/>
+                  <!-- Section -->
+                    <div class="w-full">
+                        <div class="text-xl">Add Users</div>
+                        <div class="text-secondary">Share the public or private evnts to the users with expire.</div>
+                    </div>
+                    <div class="mt-8">
+                        <div
+                            class="group inline-flex items-center mt-2 -ml-4 py-2 px-4 rounded cursor-pointer"
+                            (click)="addUserForm(true)">
+                            <mat-icon
+                                class="icon-size-5"
+                                [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
+                            <span class="ml-2 font-medium text-secondary group-hover:underline">Add</span>
+                        </div>
+                        <div class="space-y-4">
+                            <ng-container *ngFor="let user of usersFormArray().controls; let i=index;  let first = first; let last = last; trackBy: trackByFn">
+                                <div class="grid sm:grid-cols-6 gap-6 w-full mt-8" [formGroup]="user">
+                                    <div class="sm:col-span-2">
+                                        <mat-form-field class="fuse-mat-no-subscript w-full">
+                                            <mat-label>User</mat-label>
+                                            <mat-icon
+                                                class="icon-size-5"
+                                                [svgIcon]="'heroicons_solid:user'"
+                                                matPrefix></mat-icon>
+                                            <input type="text"
+                                                placeholder="Enter email"
+                                                aria-label="Enter email"
+                                                matInput
+                                                [formControlName]="'email'">
+                                        </mat-form-field>
+                                        <div class="text-danger margin-bottom-thin my-mat-hint" style="color: rgba(var(--fuse-primary-rgb), var(--tw-text-opacity)) !important; font-weight: bold;"
+                                                 *ngIf="(user.dirty || user.touched) && user.get('email')?.hasError('email')">
+                                                 <span style="color: red; font-weight: normal;">Enter a valid email !</span>
+                                        </div>
+                                    </div>
+                                    <div class="sm:col-span-3" style="min-width: 14rem;">
+                                        <mat-form-field class="fuse-mat-no-subscript w-full">
+                                            <mat-icon
+                                                matPrefix
+                                                class="hidden sm:flex icon-size-5"
+                                                [svgIcon]="'heroicons_solid:clock'"></mat-icon>
+                                            <mat-label> Expire</mat-label>
+                                            <input matInput [ngxMatDatetimePicker]="picker" placeholder="Choose a date" [formControlName]="'expiresAt'"
+                                                [min]="minDate" [max]="maxDate" [disabled]="disabled">
+                                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                                <ngx-mat-datetime-picker #picker [showSpinners]="showSpinners" [showSeconds]="showSeconds"
+                                                    [stepHour]="stepHour" [stepMinute]="stepMinute"  [touchUi]="touchUi"
+                                                    [color]="color" [enableMeridian]="enableMeridian" [defaultTime]="defaultTime">
+                                                </ngx-mat-datetime-picker>
+                                        </mat-form-field>
+                                        <div class="text-danger margin-bottom-thin my-mat-hint" style="color: rgba(var(--fuse-primary-rgb), var(--tw-text-opacity)) !important; font-weight: bold;"
+                                            *ngIf="user.get('expiresAt').value">
+                                            <span style="color: black; font-weight: normal;">Expires At </span>{{user.get('expiresAt').value | date: 'medium'}} 
+                                        </div>
+                                    </div>
+                                    <div class="sm:col-span-1">
+                                        <!-- Remove user -->
+                                        <ng-container *ngIf="usersFormArray().controls.length > 0">
+                                            <div
+                                                class="flex items-center w-10 pl-2"
+                                                [ngClass]="'mt-6'">
+                                                <button
+                                                    class="w-8 h-8 min-h-8"
+                                                    mat-icon-button
+                                                    (click)="removeUserForm(i)"
+                                                    matTooltip="Remove" style="top: 5px;">
+                                                    <mat-icon
+                                                        class="icon-size-5"
+                                                        [svgIcon]="'heroicons_solid:trash'"></mat-icon>
+                                                </button>
+                                            </div>
+                                        </ng-container>
+                                    </div>
+                                    <div class="sm:col-span-3">
+                                        <mat-label>Download</mat-label> &nbsp;
+                                        <mat-slide-toggle [formControlName]="'haveReadPermission'"></mat-slide-toggle>
+                                        &nbsp; &nbsp;
+                                        <mat-label>Write</mat-label> &nbsp;
+                                        <mat-slide-toggle [formControlName]="'haveWritePermission'"></mat-slide-toggle>
+                                        
+                                    </div>
+                                    <div class="sm:col-span-3">
+                                        <mat-label>Delete</mat-label> &nbsp;
+                                        <mat-slide-toggle [formControlName]="'haveDeletePermission'"></mat-slide-toggle>
+                                        &nbsp; &nbsp;
+                                        <mat-label>Upload</mat-label> &nbsp;
+                                        <mat-slide-toggle [formControlName]="'haveUploadPermission'"></mat-slide-toggle>
+                                    </div>
+                                    <div class="sm:col-span-2">
+                                    </div>
+                                    <div class="sm:col-span-1"></div>
+                                </div>
+                                <hr class="border-b mt-4 mb-6"/>
+                            </ng-container>
+                        </div> 
+                    </div> 
+                </form>
+            </div>
+        </div>
+    </div>
+    
+     <!-- Actions -->
+     <div class="flex items-center mt-10 -mx-6 sm:-mx-12 py-4 pr-4 pl-1 sm:pr-12 sm:pl-7 border-t bg-gray-50 dark:bg-transparent"
+        style="margin: 0 !important;">
+        <!-- Delete -->
+        <button
+            mat-button
+            [matTooltip]="'Close'"
+            [routerLink]="['../']" 
+            (click)="closeDrawer()"
+            [color]="'warn'">
+            Close
+        </button>
+        <!-- Cancel -->
+        <button
+            class="ml-auto"
+            [matTooltip]="'Cancel'"
+            mat-button 
+            [routerLink]="['../']" 
+            (click)="closeDrawer()"
+            >
+            Cancel
+        </button>
+        <!-- Save -->
+        <button
+            class="ml-2"
+            mat-flat-button
+            [matTooltip]="'Save'"
+            [color]="'primary'"
+            (click)="onSubmit()">
+            Save
+        </button>
+    </div>
+</div>
+
+<style>
+    .my-mat-hint {
+  line-height: 1.2em;
+  transform: translateY(10px);
+  font-size: 75%;
+}
+</style>

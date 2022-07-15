@@ -1,0 +1,277 @@
+<div class="flex flex-col flex-auto min-w-0">
+
+    <!-- Header -->
+    <div class="flex flex-col shadow bg-card">
+
+        <!-- Cover image -->
+        <div>
+            <img
+                class="h-40 lg:h-80 object-cover"
+                src="https://img.wallpapersafari.com/desktop/1600/900/78/48/Bc5CeK.jpg"
+                alt="Cover image">
+        </div>
+
+        <!-- User info -->
+        <div class="flex flex-col flex-0 lg:flex-row items-center max-w-5xl w-full mx-auto px-8 lg:h-18 bg-card">
+            <!-- Avatar -->
+            <div class="relative flex items-center justify-center w-32 h-32 rounded-full overflow-hidden ring-4 ring-bg-card lg:-mt-22">
+                <img *ngIf="user?.profilePhoto"
+                    class="w-32 h-32 rounded-full ring-4 ring-bg-card"
+                    [src]="user?.profilePhoto"
+                    alt="User avatar">
+                <div
+                    class="flex items-center justify-center w-full h-full rounded overflow-hidden uppercase text-8xl font-bold leading-none bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-200"
+                    *ngIf="!user?.profilePhoto">
+                    {{user?.firstName.charAt(0)}}
+                </div> 
+            </div>
+
+            <!-- Details -->
+            <div class="flex flex-col items-center lg:items-start mt-4 lg:mt-0 lg:ml-8">
+                <div class="text-lg font-bold leading-none">{{user?.firstName}} {{user?.lastName}}</div>
+                <div class="text-secondary">{{user?.country?.name}},&nbsp;{{user?.country?.code}}</div>
+            </div>
+
+            <!-- Separator -->
+            <div class="hidden lg:flex h-8 mx-8 border-l-2"></div>
+
+            <!-- Stats -->
+            <div class="flex items-center mt-6 lg:mt-0 space-x-6">
+                <div class="flex flex-col items-center">
+                    <span class="font-bold">{{totalEvents}}</span>
+                    <span class="text-sm font-medium text-secondary">EVENTS</span>
+                </div>
+                <!-- <div class="flex flex-col items-center">
+                    <span class="font-bold">1.2k</span>
+                    <span class="text-sm font-medium text-secondary">FOLLOWING</span>
+                </div> -->
+            </div>
+
+            <!-- Menu -->
+            <!-- <div class="flex items-center mt-8 mb-4 lg:m-0 lg:ml-auto space-x-6">
+                <a
+                    class="font-medium"
+                    [routerLink]="['./']">
+                    Home
+                </a>
+                <a
+                    class="text-secondary"
+                    [routerLink]="['./']">
+                    About
+                </a>
+                <a
+                    class="text-secondary"
+                    [routerLink]="['./']">
+                    Followers
+                </a>
+                <a
+                    class="text-secondary"
+                    [routerLink]="['./']">
+                    Gallery
+                </a>
+            </div> -->
+
+        </div>
+
+    </div>
+
+    <!-- Main -->
+    <div class="flex flex-auto p-6" [ngStyle]="{'justify-content': masonryColumns == 1 ? 'center' : ''}">
+        <!-- Column -->
+        <div class="hidden lg:flex flex-col items-start mr-8" >
+
+            <!-- About me -->
+            <fuse-card class="flex flex-col max-w-80 w-full p-8" >
+                <div class="text-2xl font-semibold leading-tight">About Me</div>
+                <div class="mt-4">
+                   {{(readMore) ? aboutMe : aboutMe | slice:0:50}} <span *ngIf="!readMore&&aboutMe">...</span>
+                   <a href="javascript:;" *ngIf="aboutMe.length > 30" (click)="readMore =! readMore" class="text-md font-semibold leading-none tracking-wide text-primary mb-1">
+                       <span *ngIf="!readMore">Read More</span>
+                       <span *ngIf="readMore">Read Less</span>
+                    </a>
+                </div>
+                <hr class="w-full border-t my-6">
+                <div class="flex flex-col">
+                    <div class="flex items-center">
+                        <mat-icon
+                            class="icon-size-5 mr-3"
+                            [svgIcon]="'heroicons_solid:at-symbol'"></mat-icon>
+                        <span class="leading-none">{{user?.email}}</span>
+                    </div>
+                    <div class="flex items-center mt-4">
+                        <mat-icon
+                            class="icon-size-5 mr-3"
+                            [svgIcon]="'heroicons_solid:briefcase'"></mat-icon>
+                        <span class="leading-none">Photographer</span>
+                    </div>
+                    <div class="flex items-center mt-4">
+                        <mat-icon
+                            class="icon-size-5 mr-3"
+                            [svgIcon]="'heroicons_solid:device-mobile'"></mat-icon>
+                        <span class="leading-none">{{user?.mobile}}</span>
+                    </div>
+                </div>
+                <!-- <button
+                    class="px-6 mt-8"
+                    mat-flat-button
+                    [color]="'primary'"
+                    [routerLink]="['./']">
+                    See complete bio
+                </button> -->
+            </fuse-card> 
+
+        </div>
+
+        <!-- Column -->
+        <div class="flex flex-col items-start" style="width: 100%;">
+                 <!-- About me -->
+            <fuse-card class="flex flex-col p-8"  *ngIf="masonryColumns == 1" >
+                <div class="text-2xl font-semibold leading-tight">About Me</div>
+                <div class="mt-4" >
+                    {{(readMore) ? aboutMe : aboutMe | slice:0:50}} <span *ngIf="!readMore&&aboutMe">...</span>
+                   <a href="javascript:;" *ngIf="aboutMe.length > 30" (click)="readMore =! readMore" class="text-md font-semibold leading-none tracking-wide text-primary mb-1">
+                       <span *ngIf="!readMore">Read More</span>
+                       <span *ngIf="readMore">Read Less</span>
+                    </a>
+                </div>
+                <hr class="w-full border-t my-6">
+                <div class="flex flex-col">
+                    <div class="flex items-center">
+                        <mat-icon
+                            class="icon-size-5 mr-3"
+                            [svgIcon]="'heroicons_solid:at-symbol'"></mat-icon>
+                        <span class="leading-none">{{user?.email}}</span>
+                    </div>
+                    <div class="flex items-center mt-4">
+                        <mat-icon
+                            class="icon-size-5 mr-3"
+                            [svgIcon]="'heroicons_solid:briefcase'"></mat-icon>
+                        <span class="leading-none">Photographer</span>
+                    </div>
+                    <div class="flex items-center mt-4">
+                        <mat-icon
+                            class="icon-size-5 mr-3"
+                            [svgIcon]="'heroicons_solid:device-mobile'"></mat-icon>
+                        <span class="leading-none">{{user?.mobile}}</span>
+                    </div>
+                </div>
+                <button
+                    class="px-6 mt-8"
+                    mat-flat-button
+                    [color]="'primary'"
+                    [routerLink]="['./']">
+                    See complete bio
+                </button>
+            </fuse-card> 
+              <!-- Masonry layout -->
+                <ng-container *ngIf="loading; else loading">
+                    <ng-container *ngIf="(events?.length); else noImages">
+                        <fuse-masonry
+                        class="-mx-2" 
+                        style="padding: 10px;"
+                        [items]="events"
+                        [columns]="masonryColumns"
+                        [columnsTemplate]="columnsTemplate">
+                        <!-- Columns template -->
+                        <ng-template
+                            #columnsTemplate
+                            let-columns>
+                            <!-- Columns -->
+                            <ng-container *ngFor="let column of columns; trackBy: trackByFn">
+                                <!-- Column -->
+                                <div class="flex-1 px-2 space-y-4">
+                                    <ng-container *ngFor="let res of column.items; trackBy: trackByFn">
+                                        
+                                        <fuse-card class="flex flex-col" >
+                                            <ng-container *ngIf="res.images">
+                                                <div class="flex mx-6 sm:mx-8 mb-4 cursor-pointer" style="padding-top: 25px;"
+                                                    [routerLink]="['/events', res.eventId]">
+                                                    <div class="flex h-60 pr-1">
+                                                        <img
+                                                            class="rounded object-cover"
+                                                            [src]= "res.images[0] ? res.images[0] : 'assets/images/noImage.png'"
+                                                            alt="Card cover image">
+                                                    </div>
+                                                    <div class="flex flex-col pl-1" style="width: 13rem !important; max-width: 13rem !important">
+                                                        <div class="flex pb-1" style="height: 7.5rem !important;">
+                                                            <img
+                                                                class="rounded object-cover"
+                                                                [src]= "res.images[1] ? res.images[1] : 'assets/images/noImage.png'"
+                                                                alt="Card cover image">
+                                                        </div>
+                                                        <div class="flex pt-1" style="height: 7.5rem !important;">
+                                                            <img
+                                                                class="rounded object-cover"
+                                                                [src]= "res.images[2] ? res.images[2] : 'assets/images/noImage.png'"
+                                                                alt="Card cover image">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </ng-container>
+                                            <div>
+                                                <div class="text-md font-semibold leading-none tracking-wide text-primary mb-1" style="padding-left: 25px;">{{res.eventName}}</div>
+                                                <hr class="border-b mx-6 mt-4 mb-6"/>
+                                                <div class="flex flex-col sm:flex-row sm:items-center mx-6 mb-4 ">
+                                                    <div class="flex items-center">
+                                                        <!-- <div class="flex flex-0 items-center justify-center w-10 h-10 rounded-full overflow-hidden cursor-pointer"
+                                                            [routerLink]="['/profile', res.user.userId]">
+                                                            <ng-container *ngIf="res.user.profilePhoto">
+                                                                <img class="w-10 h-10 rounded-full" [src]="res.user.profilePhoto">
+                                                            </ng-container>
+                                                            <ng-container *ngIf="!res.user.profilePhoto">
+                                                                <div class="flex items-center justify-center w-full h-full rounded-full text-lg uppercase bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-200">
+                                                                    {{res.user.firstName.charAt(0)}}
+                                                                </div>
+                                                            </ng-container>
+                                                        </div> -->
+                                                        <div class="flex flex-col ml-3 cursor-pointer" >
+                                                            <!-- <span class="font-medium leading-none">{{res.createdAt | date}}</span> -->
+                                                            <span class="text-sm text-secondary leading-none mt-1">{{res.createdAt | date}}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="hidden sm:flex flex-auto"></div>
+                                                    <div class="flex items-center mt-4 sm:mt-0">
+                                                        <div
+                                                            class="flex items-center m-1 py-0.5 px-3 rounded-full text-sm font-medium">
+                                                            <mat-icon
+                                                                class="text-black"
+                                                                [svgIcon]="res.isPublic ? 'heroicons_outline:globe' : 'heroicons_outline:lock-closed'"></mat-icon>
+                                                        </div>
+                                                    </div>
+                                                    <div class="flex items-center mt-4 sm:mt-0">
+                                                        <div
+                                                            class="flex items-center m-1 py-0.5 px-3 rounded-full text-sm font-medium text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700">
+                                                               <span style="color: black;"> {{res.imageCount}} </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fuse-card>
+                                    </ng-container>
+                                </div>
+                            </ng-container>
+                        </ng-template>
+                        </fuse-masonry>
+                    </ng-container>
+                </ng-container>
+
+                <!-- Loading template -->
+                <ng-template #loading>
+                    <div class="flex flex-auto flex-col items-center justify-center bg-gray-100 dark:bg-transparent" style="width: 100%;">
+                        <div class="mt-4 text-2xl font-semibold tracking-tight text-secondary">Loading...</div>
+                    </div>
+                </ng-template>
+
+                <!-- No notes template -->
+                <ng-template #noImages>
+                    <div class="flex flex-auto flex-col items-center justify-center bg-gray-100 dark:bg-transparent" style="width: 100%;" >
+                        <mat-icon class="icon-size-24" [svgIcon]="'iconsmind:file_hide'"></mat-icon>
+                        <div class="mt-4 text-2xl font-semibold tracking-tight text-secondary">There are no Events!</div>
+                    </div>
+                </ng-template>
+
+        </div>
+
+    </div>
+
+</div>

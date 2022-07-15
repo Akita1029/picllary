@@ -1,0 +1,101 @@
+<div class="flex flex-col flex-auto md:w-180 md:min-w-300 -m-6">
+    <!-- //titilebar -->
+    <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8">
+        <div class="text-lg font-medium">{{selectedImage.title}}</div>
+        <button mat-icon-button matDialogClose [tabIndex]="-1">
+            <mat-icon class="text-current" [svgIcon]="'heroicons_outline:x'"></mat-icon>
+        </button>
+    </div>
+
+    <!-- //image -->
+    <div class="relative w-full">
+        <!-- //details pan -->
+        <div class="static bg-neutral-600">
+
+            <button mat-icon-button [disabled]="!eventDetails.haveReadPermission" (click)="downloadImage()">
+                <mat-icon class="text-white" [svgIcon]="'heroicons_outline:download'">
+                </mat-icon>
+            </button>
+
+            <button mat-icon-button [disabled]="!eventDetails.haveDeletePermission"
+                (click)="deleteImage(selectedImage.imageGuid)">
+                <mat-icon class="text-white" [svgIcon]="'heroicons_outline:trash'"></mat-icon>
+            </button>
+
+            <button mat-icon-button [disabled]="!eventDetails.haveWritePermission" (click)="toggleEdit()">
+                <mat-icon class="text-white" [svgIcon]="'heroicons_outline:pencil'">
+                </mat-icon>
+            </button>
+            <button mat-icon-button (click)="lightbox.open(0, 'lightbox', {panelClass: 'fullscreen'})">
+                <mat-icon class="text-white" [svgIcon]="'heroicons_outline:arrows-expand'">
+                </mat-icon>
+            </button>
+
+            <!-- <a download='file' href={{selectedImage.imageUrl}} >
+             download image
+            </a> -->
+
+            <a download={{selectedImage.imageUrl}}></a>
+        </div>
+        <gallery id="basic-test" [items]="items" (indexChange)="onSlideChange($event)"></gallery>
+
+
+    </div>
+
+    <!-- ==============================edit feature============================== -->
+    <ng-container *ngIf="editFlag">
+        <form name="f" [formGroup]="imageDetailsForm" class="form">
+            <div class="m-4">
+                <div class="flex flex-col gt-xs:flex-row">
+                    <mat-form-field class="flex-auto gt-xs:pr-3">
+                        <input matInput [formControlName]="'title'" [placeholder]="'Titile'" required>
+                        <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:pencil-alt'"></mat-icon>
+                    </mat-form-field>
+                    <mat-form-field class="flex-auto gt-xs:pl-3">
+                        <input matInput [formControlName]="'discription'" [placeholder]="'Description'" required>
+                        <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:chat-alt-2'"></mat-icon>
+                    </mat-form-field>
+                </div>
+
+                <div class="flex">
+                    <mat-form-field class="fuse-mat-textarea flex-auto">
+                        <mat-chip-list #chipList aria-label="tags">
+
+                            <mat-chip *ngFor="let tag of imageTags" (removed)="removeTag(tag)">
+                                {{tag}}
+                                <button matChipRemove>
+                                    <mat-icon>cancel</mat-icon>
+                                </button>
+                            </mat-chip>
+                            <input matInput [placeholder]="'Tag'" #fruitInput [matChipInputFor]="chipList"
+                                [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [formControlName]="'tag'"
+                                (matChipInputTokenEnd)="addTag($event)">
+                            <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:tag'"></mat-icon>
+
+                        </mat-chip-list>
+
+                    </mat-form-field>
+                </div>
+
+                <div class="flex">
+                    <mat-form-field class="fuse-mat-textarea flex-auto">
+                        <input matInput [formControlName]="'price'" type="number" [placeholder]="'Price'">
+                        <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:currency-dollar'">
+                        </mat-icon>
+                    </mat-form-field>
+                </div>
+
+                <div class="flex items-center justify-end">
+                    <button mat-button (click)=" toggleEdit()" [disabled]="!eventDetails.haveWritePermission">
+                        Cancel
+                    </button>
+                    <button (click)="onUpdateImage()" [disabled]="imageDetailsForm.invalid" class="px-6 ml-3"
+                        mat-flat-button [color]="'primary'">
+                        Save
+                    </button>
+                </div>
+            </div>
+        </form>
+    </ng-container>
+
+</div>

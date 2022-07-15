@@ -1,0 +1,150 @@
+<div class="absolute inset-0 flex flex-col min-w-0 overflow-hidden">
+
+    <mat-drawer-container
+        class="flex-auto h-full bg-card dark:bg-transparent"
+        (backdropClick)="onBackdropClicked()">
+
+        <!-- Drawer -->
+        <mat-drawer
+            class="w-full md:w-160 dark:bg-gray-900"
+            [mode]="drawerMode"
+            [opened]="false"
+            [position]="'end'"
+            [disableClose]="true"
+            #matDrawer>
+            <router-outlet></router-outlet>
+        </mat-drawer>
+
+        <mat-drawer-content class="flex flex-col dark:bg-transparent">
+
+            <!-- Main -->
+            <div class="flex-auto">
+            <!-- Alert -->
+                <fuse-alert
+                    *ngIf="showAlert"
+                    [appearance]="alert.appearance"
+                    [type]="alert.type"
+                    [@shake]="alert.type === 'error'">
+                    {{alert.message}}
+                </fuse-alert>
+                <!-- Header -->
+                <div class="flex flex-col sm:flex-row md:flex-col flex-auto justify-between py-8 px-6 md:px-8 border-b">
+
+                    <br *ngIf="isSM"/>
+                    <!-- Main actions -->
+                    <div class="flex items-center mt-4 sm:mt-0 md:mt-4">
+                        <!-- Search -->
+                        <div class="flex-auto">
+                            <!-- <br/> -->
+                            <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded w-full min-w-50">
+                                <mat-icon
+                                    class="icon-size-5"
+                                    matPrefix
+                                    [svgIcon]="'heroicons_solid:search'"></mat-icon>
+                                <input
+                                    matInput
+                                    [formControl]="searchInputControl"
+                                    [autocomplete]="'off'"
+                                    [placeholder]="'Search Public Events'">
+                            </mat-form-field>
+                        </div>
+                        
+                    </div>
+                </div>
+
+                <!-- publicEvent list -->
+                <div class="relative" >
+                    <ng-container *ngIf="eventsModel$ | async as publicEvents">
+                        <ng-container *ngIf="publicEvents.length; else noEvents">
+                            <ng-container *ngFor="let publicEvent of publicEvents; let i = index; trackBy: trackByFn">
+
+                                <!-- NEW -->
+                                <div class="z-20 flex items-center px-6 py-4 md:px-8 cursor-pointer border-b"
+                                    [ngClass]="{'hover:bg-gray-100 dark:hover:bg-hover': !selectedContact || selectedContact.id !== contact.id,
+                                    'bg-primary-50 dark:bg-hover': selectedContact && selectedContact.id === contact.id}">
+                                    <div class="flex items-center"
+                                     [routerLink]="['./eventmanagement', publicEvent.eventId]" style="width: 100%;">
+                                     <div class="flex flex-0 items-center justify-center w-10 h-10 rounded-full overflow-hidden" >
+                                            <ng-container *ngIf="publicEvent.images.length > 0">
+                                                <img
+                                                    class="object-cover w-full h-full"
+                                                    [src]="publicEvent.images[0]"
+                                                    alt="Event avatar"/>
+                                            </ng-container>
+                                            <ng-container *ngIf="!publicEvent.images || publicEvent.images.length == 0">
+                                                <div class="flex items-center justify-center w-full h-full rounded-full text-lg uppercase bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-200">
+                                                    {{publicEvent.eventName.charAt(0)}}
+                                                </div>
+                                            </ng-container>
+                                        </div>
+                                        <div [class]="!isSM ? 'ml-4' : 'ml-2'">
+                                            <div class="font-medium" style="word-break: break-word;">{{publicEvent.eventName}}</div>
+                                            <div class="text-secondary">
+                                                <mat-icon 
+                                                    class="icon-size-5 sm:flex"
+                                                    [svgIcon]="!publicEvent.isPublic ? 'heroicons_solid:lock-closed' : 'heroicons_solid:globe'"></mat-icon>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center mt-4 sm:mt-0 sm:ml-auto">
+                                        <div class="order-2 sm:order-1 ml-4 sm:ml-0">
+                                            <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript w-32"
+                                                [style]="!isSM ? 'width: 10rem !important' : 'width: 8rem !important'">
+                                            <mat-select [value]="publicEvent.isPublic ? 'Public' : 'Private'"  (selectionChange)="selectedStatus($event.value,publicEvent)"
+                                                #roleSelect="matSelect"
+                                                [panelClass]="'w-72 min-w-72 max-w-72 h-auto max-h-none'">
+                                                <mat-select-trigger class="text-md">
+                                                    <span>Status:</span>
+                                                    <span class="ml-1 font-medium">{{roleSelect?.value ? roleSelect.value : 'Change Status' | titlecase}}</span>
+                                                </mat-select-trigger>
+                                                <ng-container *ngFor="let status of statuses">
+                                                    <mat-option
+                                                        class="h-auto py-4 leading-none"
+                                                        [value]="status.name">
+                                                        <div class="font-medium">{{status.name}}</div>
+                                                        <div class="mt-1.5 text-sm whitespace-normal leading-normal text-secondary">{{status.description}}</div>
+                                                    </mat-option>
+                                                </ng-container>
+                                            </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="order-1 sm:order-2 sm:ml-3" >
+                                            <button mat-icon-button [routerLink]="['./eventmanagement', publicEvent.eventId]">
+                                                <mat-icon
+                                                    class="text-hint"
+                                                    [svgIcon]="'heroicons_outline:pencil'"></mat-icon>
+                                            </button>
+                                            <button mat-icon-button *ngIf="isSM" (click)="deleteEvent(publicEvent)">
+                                                <mat-icon
+                                                    class="text-hint"
+                                                    [svgIcon]="'heroicons_outline:trash'"></mat-icon>
+                                            </button>
+                                        </div>
+                                        <div class="order-1 sm:order-2 sm:ml-3" >
+                                            <button mat-icon-button *ngIf="!isSM">
+                                                <mat-icon
+                                                    class="text-hint"
+                                                    [svgIcon]="'heroicons_outline:trash'"></mat-icon>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- NEW -->
+                            </ng-container>
+                        </ng-container>
+                    </ng-container>
+
+                    <!-- No Events -->
+                    <ng-template #noEvents>
+                        <div class="p-8 sm:p-16 border-t text-4xl font-semibold tracking-tight text-center">There are no Events!</div>
+                    </ng-template>
+
+                </div>
+
+            </div>
+
+        </mat-drawer-content>
+
+    </mat-drawer-container>
+
+</div>

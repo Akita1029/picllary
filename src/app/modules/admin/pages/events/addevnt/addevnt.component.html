@@ -1,0 +1,27 @@
+<div class="flex flex-col flex-auto md:w-160 md:min-w-160 -m-4">
+    <div class="m-4">
+        <mat-form-field appearance="fill" class="w-full p-2">
+            <input matInput [autocomplete]="'off'" [placeholder]="'Event Name'" [(ngModel)]="eventItem.eventName" (input)="onEventNameChange($event.target.value)">
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="w-full p-2">
+            <input matInput [autocomplete]="'off'" [placeholder]="'Price'" type="number" [(ngModel)]="eventItem.price">
+        </mat-form-field>
+        <div>
+            <mat-slide-toggle [(ngModel)]="eventItem.isPublic">Publc</mat-slide-toggle>
+        </div>
+        <ng-container *ngIf="errorMessgae" >
+            <fuse-alert [appearance]="'soft'" [name]="'alertBox2'"
+                [type]="'error'">
+                {{errorMessgae}}
+            </fuse-alert>
+        </ng-container>
+
+        <ng-container>
+            <div class="flex items-center justify-end mt-4">
+                <button mat-flat-button [color]="'primary'" (click)="addEvnt()" [disabled]="!eventItem.eventName">
+                    Save
+                </button>
+            </div>
+        </ng-container>
+    </div>
+</div>
